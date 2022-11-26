@@ -1,4 +1,4 @@
-package goembed
+package test
 
 import (
 	"embed"
@@ -40,4 +40,19 @@ func TestMultipleFiles(t *testing.T) {
 
 	c, _ := files.ReadFile("files/c.txt")
 	fmt.Println(string(c))
+}
+
+//go:embed files/*.txt
+var path embed.FS
+
+func TestPathMatcher(t *testing.T) {
+	dir, _ := path.ReadDir("files")
+
+	for _, d := range dir {
+		if !d.IsDir() {
+			fmt.Println(d.Name())
+			content, _ := path.ReadFile("files/" + d.Name())
+			fmt.Println(string(content))
+		}
+	}
 }
